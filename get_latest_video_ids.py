@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import os
 
 def fetch_tiktok_embed(url: str) -> dict:
     """
