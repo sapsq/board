@@ -3,6 +3,7 @@ name: Extract TikTok Video IDs
 on:
   schedule:
     - cron: '0 17 * * *'  # Runs every day at 5 PM UTC
+  workflow_dispatch:       # Allows manual triggering of the workflow
 
 jobs:
   fetch-video-ids:
