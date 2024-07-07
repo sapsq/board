@@ -1,4 +1,4 @@
-name: Extract TikTok Video IDs
+name: Extract and Process TikTok Video IDs
 
 on:
   schedule:
@@ -6,8 +6,12 @@ on:
   workflow_dispatch:       # Allows manual triggering of the workflow
 
 jobs:
-  fetch-video-ids:
+  fetch-and-process-video-ids:
     runs-on: ubuntu-latest
+
+    env:
+      AWANLLM_API_KEY: ${{ secrets.AWANLLM_API_KEY }}
+      TOK_API_KEY: ${{ secrets.TOK_API_KEY }}
 
     steps:
     - name: Checkout repository
@@ -23,7 +27,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests beautifulsoup4
 
-    - name: Run the script and capture output
+    - name: Run the script to get unprocessed video IDs
       id: run-script
       run: |
         UNPROCESSED_VIDEO_IDS=$(python get_latest_video_ids.py)
@@ -31,3 +35,10 @@ jobs:
 
     - name: Print unprocessed video IDs
       run: echo "${{ env.UNPROCESSED_VIDEO_IDS }}"
+
+    - name: Process unprocessed video IDs
+      run: |
+        python process_videos.py "${{ env.UNPROCESSED_VIDEO_IDS }}"
+      env:
+        AWANLLM_API_KEY: ${{ secrets.AWANLLM_API_KEY }}
+        TOK_API_KEY: ${{ secrets.TOK_API_KEY }}
