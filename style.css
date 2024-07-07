@@ -23,7 +23,7 @@ header h1 {
 }
 
 .title-icon-left, .title-icon-right {
-    width: 75px;
+    width: 80px;
     height: auto;
 }
 
@@ -120,8 +120,12 @@ a {
 
 /* Mobile Optimization */
 @media (max-width: 600px) {
+    body {
+        font-size: 12px; /* Adjust overall font size for better readability on mobile */
+    }
+
     header {
-        padding: 15px;
+        padding: 10px;
         flex-direction: row;
         justify-content: center;
     }
@@ -132,7 +136,7 @@ a {
     }
 
     .title-icon-left, .title-icon-right {
-        width: 75px;
+        width: 80px;
         margin: 0 5px;
     }
 
