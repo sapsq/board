@@ -121,9 +121,12 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
             }
             print(full_review_object)
             new_reviews.append(full_review_object)
-            processed_video_ids.append(video_id)
+
         else:
             print("AI determined this is not a food review video.")
+
+        # Add the video ID to processed_video_ids regardless of the review outcome
+        processed_video_ids.append(video_id)
     
     return new_reviews, processed_video_ids
 
