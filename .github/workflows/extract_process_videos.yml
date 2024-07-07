@@ -16,6 +16,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        persist-credentials: false  # Otherwise, the token used is the default GITHUB_TOKEN, instead of your Personal Access Token (PAT)
+        fetch-depth: 0  # Fetch all history for all branches and tags
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -42,3 +45,16 @@ jobs:
       env:
         AWANLLM_API_KEY: ${{ secrets.AWANLLM_API_KEY }}
         TOK_API_KEY: ${{ secrets.TOK_API_KEY }}
+
+    - name: Configure git
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+
+    - name: Commit files
+      run: |
+        git add reviews.json processed_videos.json
+        git commit -m "Update reviews and processed videos"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
