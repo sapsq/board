@@ -23,7 +23,7 @@ header h1 {
 }
 
 .title-icon-left, .title-icon-right {
-    width: 75px;
+    width: 40px;
     height: auto;
 }
 
@@ -45,6 +45,7 @@ th, td {
     word-wrap: break-word;
     padding: 10px;
     text-align: center;
+    vertical-align: middle; /* Ensure text is vertically centered */
 }
 
 th {
@@ -131,7 +132,7 @@ a {
     }
 
     .title-icon-left, .title-icon-right {
-        width: 75px;
+        width: 30px;
         margin: 0 5px;
     }
 
