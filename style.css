@@ -9,54 +9,54 @@ header {
     background-color: #ffcc00;
     padding: 10px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     color: #333;
     border-bottom: 4px solid #333;
     text-align: center;
+    flex-wrap: nowrap;
 }
 
 header h1 {
-    font-size: 24px;
+    font-size: 20px;
     text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
-    margin: 10px 0;
+    margin: 0 10px;
+    flex-grow: 1;
 }
 
 .title-icon-left, .title-icon-right {
-    width: 50px;
+    width: 30px;
     height: auto;
-    margin: 5px;
 }
 
 main {
-    width: 95%;
-    margin: 20px auto;
+    width: 100%;
+    margin: 10px auto;
+    overflow-x: hidden;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
-    table-layout: auto;
-    word-wrap: break-word;
+    font-size: 12px;
+    table-layout: fixed;
 }
 
 th, td {
     word-wrap: break-word;
-    padding: 10px;
+    padding: 5px;
     text-align: center;
 }
 
 th {
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
     text-transform: uppercase;
     border-bottom: 2px solid #333;
 }
 
 td {
-    font-size: 14px;
+    font-size: 12px;
     color: #333;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
@@ -109,16 +109,33 @@ a {
 
 /* Mobile Optimization */
 @media (max-width: 600px) {
+    header {
+        padding: 10px;
+        flex-direction: row;
+        justify-content: center;
+    }
+
     header h1 {
-        font-size: 20px;
+        font-size: 16px;
+        margin: 0 5px;
     }
 
     .title-icon-left, .title-icon-right {
-        width: 40px;
+        width: 20px;
+        margin: 0 5px;
+    }
+
+    main {
+        width: 100%;
+        margin: 5px auto;
+    }
+
+    table {
+        font-size: 10px;
     }
 
     th, td {
-        font-size: 12px;
-        padding: 8px;
+        font-size: 10px;
+        padding: 4px;
     }
 }
