@@ -62,7 +62,13 @@ td {
     transition: background-color 0.3s ease;
 }
 
-td.rank, td.score {
+/* Specific styles for rank and score */
+th.rank, td.rank {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+th.score, td.score {
     font-size: 20px;
     font-weight: bold;
 }
@@ -143,7 +149,11 @@ a {
         padding: 8px;
     }
 
-    td.rank, td.score {
+    th.rank, td.rank {
+        font-size: 18px;
+    }
+
+    th.score, td.score {
         font-size: 18px;
     }
 }
