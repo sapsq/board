@@ -30,6 +30,4 @@ jobs:
         echo "VIDEO_IDS=$VIDEO_IDS" >> $GITHUB_ENV
 
     - name: Print video IDs
-      run: echo "$VIDEO_IDS"
-      env:
-        VIDEO_IDS: ${{ steps.run-script.outputs.VIDEO_IDS }}
+      run: echo "${{ env.VIDEO_IDS }}"
