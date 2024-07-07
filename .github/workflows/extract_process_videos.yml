@@ -55,7 +55,7 @@ jobs:
       run: |
         git add reviews.json processed_videos.json
         git commit -m "Update reviews and processed videos"
-        git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}@github.com/${{ github.repository }}.git
+        git remote set-url origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git
         git push origin HEAD:main
       env:
-        GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
