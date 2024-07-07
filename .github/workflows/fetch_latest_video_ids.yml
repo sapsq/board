@@ -28,6 +28,3 @@ jobs:
         run: |
           video_ids=$(python get_latest_video_ids.py | tail -n 1)
           echo "VIDEO_IDS=$video_ids" >> $GITHUB_ENV
-
-      - name: Display fetched video IDs
-        run: echo "Fetched video IDs: ${{ env.VIDEO_IDS }}"
