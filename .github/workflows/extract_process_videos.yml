@@ -3,7 +3,7 @@ name: Extract and Process TikTok Video IDs
 on:
   schedule:
     - cron: '0 17 * * *'  # Runs every day at 5 PM UTC
-  workflow_dispatch:       # Allows manual triggering of the workflow
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   fetch-and-process-video-ids:
@@ -17,7 +17,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
-        persist-credentials: false  # Otherwise, the token used is the default GITHUB_TOKEN, instead of your Personal Access Token (PAT)
+        persist-credentials: false  # Ensure the token persists across actions
         fetch-depth: 0  # Fetch all history for all branches and tags
 
     - name: Set up Python
@@ -51,10 +51,11 @@ jobs:
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
 
-    - name: Commit files
+    - name: Commit and push changes
       run: |
         git add reviews.json processed_videos.json
         git commit -m "Update reviews and processed videos"
-        git push
+        git remote set-url origin https://${{ secrets.DEPLOY_TOKEN }}@github.com/${{ github.repository }}.git
+        git push origin HEAD:main
       env:
         GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
