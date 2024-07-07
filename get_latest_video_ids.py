@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import os
 
 def fetch_tiktok_embed(url: str) -> dict:
     """
@@ -44,8 +45,9 @@ def main():
     data = fetch_tiktok_embed(url)
     video_ids = extract_video_ids(data, username)
 
-    # Set output for GitHub Action
-    print(f'::set-output name=video_ids::{json.dumps(video_ids)}')
+    # Write the video IDs to the GITHUB_OUTPUT environment file
+    with open(os.getenv('GITHUB_OUTPUT'), 'a') as fh:
+        fh.write(f"video_ids={json.dumps(video_ids)}\n")
 
 if __name__ == "__main__":
     main()
