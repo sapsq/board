@@ -45,7 +45,7 @@ def main():
     data = fetch_tiktok_embed(url)
     video_ids = extract_video_ids(data, username)
 
-     # Output the video IDs as JSON
+    # Output the video IDs as JSON
     print(json.dumps(video_ids))
 
 if __name__ == "__main__":
