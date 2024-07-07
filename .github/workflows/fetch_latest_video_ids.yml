@@ -1,0 +1,33 @@
+name: Fetch Latest Video IDs
+
+on:
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+  schedule:
+    - cron: '0 17 * * *'  # Runs daily at 5 PM (17:00)
+
+jobs:
+  fetch-latest-video-ids:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run get_latest_video_ids.py
+        id: fetch_ids
+        run: |
+          video_ids=$(python get_latest_video_ids.py | tail -n 1)
+          echo "VIDEO_IDS=$video_ids" >> $GITHUB_ENV
+
+      - name: Display fetched video IDs
+        run: echo "Fetched video IDs: ${{ env.VIDEO_IDS }}"
