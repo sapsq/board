@@ -89,4 +89,3 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching reviews:', error));
 });
-
