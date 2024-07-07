@@ -26,8 +26,8 @@ jobs:
     - name: Run the script and capture output
       id: run-script
       run: |
-        VIDEO_IDS=$(python get_latest_video_ids.py)
-        echo "VIDEO_IDS=$VIDEO_IDS" >> $GITHUB_ENV
+        UNPROCESSED_VIDEO_IDS=$(python get_latest_video_ids.py)
+        echo "UNPROCESSED_VIDEO_IDS=$UNPROCESSED_VIDEO_IDS" >> $GITHUB_ENV
 
-    - name: Print video IDs
-      run: echo "${{ env.VIDEO_IDS }}"
+    - name: Print unprocessed video IDs
+      run: echo "${{ env.UNPROCESSED_VIDEO_IDS }}"
