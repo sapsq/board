@@ -47,6 +47,7 @@ function populateTable(reviews) {
     const tbody = document.querySelector('#leaderboard tbody');
     tbody.innerHTML = '';
 
+    // Sort reviews by score in descending order
     reviews
         .sort((a, b) => b.score - a.score)
         .forEach((review, index) => {
@@ -55,8 +56,8 @@ function populateTable(reviews) {
             row.dataset.videoUrl = review.videoUrl;
 
             row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${review.score}</td>
+                <td class="rank">${index + 1}</td>
+                <td class="score">${review.score}</td>
                 <td>${review.description}</td>
                 <td>View</td>
             `;
@@ -88,3 +89,4 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching reviews:', error));
 });
+
