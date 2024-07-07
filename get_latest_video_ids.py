@@ -45,9 +45,8 @@ def main():
     data = fetch_tiktok_embed(url)
     video_ids = extract_video_ids(data, username)
 
-    # Write the video IDs to the GITHUB_ENV environment file
-    with open(os.getenv('GITHUB_ENV'), 'a') as fh:
-        fh.write(f"VIDEO_IDS={json.dumps(video_ids)}\n")
+     # Output the video IDs as JSON
+    print(json.dumps(video_ids))
 
 if __name__ == "__main__":
     main()
