@@ -26,7 +26,7 @@ jobs:
     - name: Run the script and capture output
       id: run-script
       run: |
-        VIDEO_IDS=$(python script.py)
+        VIDEO_IDS=$(python get_latest_video_ids.py)
         echo "VIDEO_IDS=$VIDEO_IDS" >> $GITHUB_ENV
 
     - name: Print video IDs
