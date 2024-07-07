@@ -7,60 +7,64 @@ body {
 
 header {
     background-color: #ffcc00;
-    padding: 10px;
+    padding: 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     color: #333;
     border-bottom: 4px solid #333;
     text-align: center;
-    flex-wrap: nowrap;
 }
 
 header h1 {
-    font-size: 20px;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+    font-size: 32px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.1); /* Lighter shadow color */
     margin: 0 10px;
-    flex-grow: 1;
 }
 
 .title-icon-left, .title-icon-right {
-    width: 30px;
+    width: 40px;
     height: auto;
 }
 
 main {
-    width: 100%;
-    margin: 10px auto;
+    width: 90%;
+    margin: 20px auto;
     overflow-x: hidden;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
+    font-size: 14px;
     table-layout: fixed;
+    margin: 10px 0;
 }
 
 th, td {
     word-wrap: break-word;
-    padding: 5px;
+    padding: 10px;
     text-align: center;
 }
 
 th {
-    font-size: 14px;
+    font-size: 18px;
     color: #333;
     text-transform: uppercase;
     border-bottom: 2px solid #333;
 }
 
 td {
-    font-size: 12px;
+    font-size: 14px;
     color: #333;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+td.rank, td.score {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 tr:hover td {
@@ -110,32 +114,36 @@ a {
 /* Mobile Optimization */
 @media (max-width: 600px) {
     header {
-        padding: 10px;
+        padding: 15px;
         flex-direction: row;
         justify-content: center;
     }
 
     header h1 {
-        font-size: 16px;
+        font-size: 24px;
         margin: 0 5px;
     }
 
     .title-icon-left, .title-icon-right {
-        width: 20px;
+        width: 30px;
         margin: 0 5px;
     }
 
     main {
-        width: 100%;
-        margin: 5px auto;
+        width: 90%;
+        margin: 10px auto;
     }
 
     table {
-        font-size: 10px;
+        font-size: 12px;
     }
 
     th, td {
-        font-size: 10px;
-        padding: 4px;
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    td.rank, td.score {
+        font-size: 18px;
     }
 }
