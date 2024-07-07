@@ -94,11 +94,22 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
         print(word_and_score)
 
         ai_response = word_and_score['choices'][0]['message']['content']
-        print(ai_response)
+        print(f"AI Response: {ai_response}")
 
-        json_ai_response = json.loads(ai_response)
+        success = False
+        for attempt in range(3):  # Retry up to 3 times
+            try:
+                json_ai_response = json.loads(ai_response)
+                success = True
+                break
+            except json.JSONDecodeError as e:
+                print(f"Attempt {attempt + 1}: Failed to parse AI response: {e}")
+        
+        if not success:
+            print("Failed to parse AI response after 3 attempts, skipping this video.")
+            continue
 
-        if json_ai_response['review']:
+        if json_ai_response.get('review'):
             print("Determined this is a food review video.")
 
             full_review_object = {
