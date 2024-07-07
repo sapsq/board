@@ -1,4 +1,8 @@
-// Function to generate embed HTML from video URL
+/**
+ * Function to generate embed HTML from video URL.
+ * @param {string} videoUrl - The URL of the TikTok video.
+ * @returns {string} - HTML string for embedding the video.
+ */
 function generateEmbedHtml(videoUrl) {
     const videoId = videoUrl.split('/').pop();
     return `
@@ -10,7 +14,10 @@ function generateEmbedHtml(videoUrl) {
     `;
 }
 
-// Function to toggle video visibility and load embed dynamically
+/**
+ * Function to toggle video visibility and load embed dynamically.
+ * @param {Event} event - The event triggered by clicking the row.
+ */
 function toggleVideo(event) {
     const row = event.currentTarget;
     const hiddenRow = row.nextElementSibling;
@@ -32,7 +39,10 @@ function toggleVideo(event) {
     }
 }
 
-// Function to populate the table
+/**
+ * Function to populate the table with review data.
+ * @param {Array} reviews - Array of review objects.
+ */
 function populateTable(reviews) {
     const tbody = document.querySelector('#leaderboard tbody');
     tbody.innerHTML = '';
@@ -69,8 +79,9 @@ function populateTable(reviews) {
 
 // Initialize table on page load
 document.addEventListener('DOMContentLoaded', () => {
-    // Fetch JSON data
-    fetch('reviews.json')
+    // Fetch JSON data with cache busting
+    const timestamp = new Date().getTime();
+    fetch(`reviews.json?${timestamp}`)
         .then(response => response.json())
         .then(reviews => {
             populateTable(reviews);
