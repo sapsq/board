@@ -78,6 +78,21 @@ def write_json(file_path: str, data: List) -> None:
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
+def extract_json_from_response(response_str: str) -> str:
+    """
+    Extract JSON object from a response string that contains extra text.
+
+    Args:
+        response_str (str): Response string containing a JSON object.
+
+    Returns:
+        str: Extracted JSON string.
+    """
+    match = re.search(r'(\{.*\})', response_str)
+    if match:
+        return match.group(1)
+    return ""
+
 def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, tok_api_key: str) -> List[dict]:
     new_reviews = []
     processed_video_ids = []
@@ -95,33 +110,31 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
         print(word_and_score)
 
         ai_response = word_and_score['choices'][0]['message']['content'].strip()
-        print(f"AI Response: {ai_response}")
+        print(f"AI Response: {repr(ai_response)}")
         print(f"AI Response Length: {len(ai_response)}")
 
         if not ai_response:
             print("AI response is empty, skipping this video.")
             continue
 
+        # Extract the JSON part from the AI response
+        json_str = extract_json_from_response(ai_response)
+        if not json_str:
+            print("Failed to extract JSON from AI response, skipping this video.")
+            continue
+
         success = False
         for attempt in range(3):  # Retry up to 3 times
             try:
-                # Try to parse as-is
-                json_ai_response = json.loads(ai_response)
+                # Try to parse the extracted JSON string
+                json_ai_response = json.loads(json_str)
                 success = True
                 break
             except json.JSONDecodeError as e:
-                print(f"Attempt {attempt + 1}: Failed to parse AI response as-is: {e}")
-                try:
-                    # Use regex to clean and replace single quotes with double quotes
-                    response_str_corrected = re.sub(r"(?<!\\)'", '"', ai_response)
-                    json_ai_response = json.loads(response_str_corrected)
-                    success = True
-                    break
-                except json.JSONDecodeError as e:
-                    print(f"Attempt {attempt + 1}: Failed to parse AI response after cleaning: {e}")
+                print(f"Attempt {attempt + 1}: Failed to parse extracted JSON: {e}")
         
         if not success:
-            print("Failed to parse AI response after 3 attempts, skipping this video.")
+            print("Failed to parse extracted JSON after 3 attempts, skipping this video.")
             continue
 
         if json_ai_response.get('review'):
