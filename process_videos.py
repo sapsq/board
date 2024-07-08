@@ -98,7 +98,7 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
 
         success = False
         for attempt in range(3):  # Retry up to 3 times
-             try:
+            try:
                 # Try to parse as-is
                 json_ai_response = json.loads(ai_response)
                 success = True
@@ -156,4 +156,4 @@ if __name__ == '__main__':
     
     # Update processed_videos.json
     existing_processed_videos = read_json('processed_videos.json')
-    write_json('processed_videos.json', existing_processed_videos + processed_video_ids)
+    write_json('processed_videos.json', existing_processed_video_ids + processed_video_ids)
