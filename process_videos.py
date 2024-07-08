@@ -98,12 +98,20 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
 
         success = False
         for attempt in range(3):  # Retry up to 3 times
-            try:
+             try:
+                # Try to parse as-is
                 json_ai_response = json.loads(ai_response)
                 success = True
                 break
-            except json.JSONDecodeError as e:
-                print(f"Attempt {attempt + 1}: Failed to parse AI response: {e}")
+            except json.JSONDecodeError:
+                # If it fails, replace single quotes with double quotes and try again
+                try:
+                    response_str_corrected = ai_response.replace("'", '"')
+                    json_ai_response = json.loads(response_str_corrected)
+                    success = True
+                    break
+                except json.JSONDecodeError as e:
+                    print(f"Attempt {attempt + 1}: Failed to parse AI response: {e}")
         
         if not success:
             print("Failed to parse AI response after 3 attempts, skipping this video.")
