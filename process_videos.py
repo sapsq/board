@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import sys
+import re
 from typing import List
 
 def transcribe(video_url: str, tok_api_key: str) -> dict:
@@ -93,8 +94,13 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
         word_and_score = find_review_score(awanllm_api_key, transcript)
         print(word_and_score)
 
-        ai_response = word_and_score['choices'][0]['message']['content']
+        ai_response = word_and_score['choices'][0]['message']['content'].strip()
         print(f"AI Response: {ai_response}")
+        print(f"AI Response Length: {len(ai_response)}")
+
+        if not ai_response:
+            print("AI response is empty, skipping this video.")
+            continue
 
         success = False
         for attempt in range(3):  # Retry up to 3 times
@@ -103,15 +109,16 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
                 json_ai_response = json.loads(ai_response)
                 success = True
                 break
-            except json.JSONDecodeError:
-                # If it fails, replace single quotes with double quotes and try again
+            except json.JSONDecodeError as e:
+                print(f"Attempt {attempt + 1}: Failed to parse AI response as-is: {e}")
                 try:
-                    response_str_corrected = ai_response.replace("'", '"')
+                    # Use regex to clean and replace single quotes with double quotes
+                    response_str_corrected = re.sub(r"(?<!\\)'", '"', ai_response)
                     json_ai_response = json.loads(response_str_corrected)
                     success = True
                     break
                 except json.JSONDecodeError as e:
-                    print(f"Attempt {attempt + 1}: Failed to parse AI response: {e}")
+                    print(f"Attempt {attempt + 1}: Failed to parse AI response after cleaning: {e}")
         
         if not success:
             print("Failed to parse AI response after 3 attempts, skipping this video.")
@@ -156,4 +163,4 @@ if __name__ == '__main__':
     
     # Update processed_videos.json
     existing_processed_videos = read_json('processed_videos.json')
-    write_json('processed_videos.json', existing_processed_video_ids + processed_video_ids)
+    write_json('processed_videos.json', existing_processed_videos + processed_video_ids)
