@@ -2,7 +2,7 @@ name: Extract and Process TikTok Video IDs
 
 on:
   schedule:
-    - cron: '0 */4 * * *'  # Runs every day at 5 PM UTC
+    - cron: '0 */4 * * *'  # Runs every 4 hours
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
@@ -51,11 +51,15 @@ jobs:
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
 
+    - name: Pull latest changes from remote
+      run: |
+        git remote set-url origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git
+        git pull origin main
+
     - name: Commit and push changes
       run: |
         git add reviews.json processed_videos.json
         git commit -m "Update reviews and processed videos"
-        git remote set-url origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git
         git push origin HEAD:main
       env:
         PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
