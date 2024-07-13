@@ -3,7 +3,7 @@ import json
 import os
 import sys
 import re
-from typing import List
+from typing import List, Tuple, Union
 
 def transcribe(video_url: str, tok_api_key: str) -> dict:
     url = 'https://tt.tokbackup.com/fetchTikTokData'
@@ -88,12 +88,39 @@ def extract_json_from_response(response_str: str) -> str:
     Returns:
         str: Extracted JSON string.
     """
-    match = re.search(r'(\{.*\})', response_str)
-    if match:
-        return match.group(1)
+    # Attempt to find the first JSON object in the response
+    json_patterns = [r'(\{.*\})', r'(\[.*\])']
+    for pattern in json_patterns:
+        match = re.search(pattern, response_str, re.DOTALL)
+        if match:
+            return match.group(1)
     return ""
 
-def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, tok_api_key: str) -> List[dict]:
+def query_ai_model(awanllm_api_key: str, transcript: str) -> dict:
+    """
+    Query the AI model to get a review score.
+
+    Args:
+        awanllm_api_key (str): API key for the AI model.
+        transcript (str): Transcript of the video.
+
+    Returns:
+        dict: Response from the AI model.
+    """
+    for attempt in range(3):  # Retry up to 3 times
+        response = find_review_score(awanllm_api_key, transcript)
+        ai_response = response['choices'][0]['message']['content'].strip()
+        json_str = extract_json_from_response(ai_response)
+        if json_str:
+            try:
+                return json.loads(json_str)
+            except json.JSONDecodeError:
+                print(f"Attempt {attempt + 1}: Failed to parse extracted JSON.")
+        else:
+            print(f"Attempt {attempt + 1}: Failed to extract JSON from AI response.")
+    return {}
+
+def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, tok_api_key: str) -> Tuple[List[dict], List[str]]:
     new_reviews = []
     processed_video_ids = []
     
@@ -106,35 +133,10 @@ def process_videos(video_ids: List[str], username: str, awanllm_api_key: str, to
         cover = response['data']['video']['cover']
         transcript = response['subtitles']
 
-        word_and_score = find_review_score(awanllm_api_key, transcript)
-        print(word_and_score)
-
-        ai_response = word_and_score['choices'][0]['message']['content'].strip()
-        print(f"AI Response: {repr(ai_response)}")
-        print(f"AI Response Length: {len(ai_response)}")
-
-        if not ai_response:
-            print("AI response is empty, skipping this video.")
-            continue
-
-        # Extract the JSON part from the AI response
-        json_str = extract_json_from_response(ai_response)
-        if not json_str:
-            print("Failed to extract JSON from AI response, skipping this video.")
-            continue
-
-        success = False
-        for attempt in range(3):  # Retry up to 3 times
-            try:
-                # Try to parse the extracted JSON string
-                json_ai_response = json.loads(json_str)
-                success = True
-                break
-            except json.JSONDecodeError as e:
-                print(f"Attempt {attempt + 1}: Failed to parse extracted JSON: {e}")
+        json_ai_response = query_ai_model(awanllm_api_key, transcript)
         
-        if not success:
-            print("Failed to parse extracted JSON after 3 attempts, skipping this video.")
+        if not json_ai_response:
+            print("Failed to get valid JSON from AI model after multiple attempts, skipping this video.")
             continue
 
         if json_ai_response.get('review'):
